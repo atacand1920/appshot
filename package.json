@@ -8,6 +8,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "prepack": "npm run build",
     "dev": "tsx src/cli.ts",
     "generate:masks": "node scripts/generate-masks.js",
     "lint": "eslint .",
@@ -17,7 +18,6 @@
     "test:unit": "vitest run --exclude '**/integration/**' --exclude '**/visual/**'",
     "test:integration": "vitest run tests/integration",
     "test:visual": "vitest run tests/visual",
-    "prepare": "npm run build",
     "clean": "rm -rf final/",
     "clean:all": "rm -rf final/ dist/ .appshot/",
     "samples": "bash template-samples/scripts/generate-all.sh"
