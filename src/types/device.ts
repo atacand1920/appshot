@@ -4,7 +4,7 @@ export type DeviceState = 'connected' | 'booted' | 'shutdown' | 'disconnected';
 
 export interface UnifiedDevice {
   id: string;                    // UDID or simulator ID
-  name: string;                   // "iPhone 15 Pro (Chris)" or "iPhone 16 Pro Max"
+  name: string;                   // "iPhone 15 Pro (Chris)" or "iPhone 17 Pro Max"
   type: DeviceType;
   category: DeviceCategory;
   displaySize?: string;           // "6.9" | "13" | etc.

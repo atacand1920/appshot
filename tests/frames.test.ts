@@ -349,7 +349,7 @@ describe('Frames.json validation', () => {
     it('should have valid PNG dimensions for sample frames', async () => {
       // Test a few key frames to ensure they load properly
       const testFrames = [
-        'iPhone 16 Pro Max Portrait.png',
+        'iPhone 17 Pro Max Portrait.png',
         'iPhone 16 Pro Max Landscape.png',
         'iPad Pro 2024 13 Portrait.png',
         'MacBook Pro 2021 16.png',

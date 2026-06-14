@@ -20,8 +20,9 @@ export interface FramesData {
 
 // Device screenshot resolutions based on Apple's official specifications
 const DEVICE_RESOLUTIONS: Record<string, { portrait: { width: number; height: number }; landscape?: { width: number; height: number } }> = {
+  // iPhone 17 Series
+  'iphone 17 pro max': { portrait: { width: 1320, height: 2868 }, landscape: { width: 2868, height: 1320 } },
   // iPhone 16 Series
-  'iphone 16 pro max': { portrait: { width: 1320, height: 2868 }, landscape: { width: 2868, height: 1320 } },
   'iphone 16 pro': { portrait: { width: 1206, height: 2622 }, landscape: { width: 2622, height: 1206 } },
   'iphone 16 plus': { portrait: { width: 1290, height: 2796 }, landscape: { width: 2796, height: 1290 } },
   'iphone 16': { portrait: { width: 1179, height: 2556 }, landscape: { width: 2556, height: 1179 } },

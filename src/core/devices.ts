@@ -25,6 +25,17 @@ export interface DeviceFrame {
 // Dynamic frame registry - will be populated from Frames.json
 export let frameRegistry: DeviceFrame[] = [
   // iPhone frames
+  // iPhone 17 Pro Max 
+  {
+    name: 'iphone-17-pro-max-portrait',
+    displayName: 'iPhone 17 Pro Max',
+    orientation: 'portrait',
+    frameWidth: 1458,
+    frameHeight: 3054,
+    screenRect: { x: 75, y: 66, width: 1320, height: 2868 },
+    deviceType: 'iphone',
+    maskPath: 'frames/iPhone 17 Pro Max Portrait_mask.png'
+  },
   // iPhone 16 Pro Max
   {
     name: 'iphone-16-pro-max-portrait',

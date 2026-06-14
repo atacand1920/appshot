@@ -25,7 +25,7 @@ export const IPHONE_PRESETS: DevicePreset[] = [
     id: 'iphone-6-9',
     name: 'iPhone 6.9" Display',
     displaySize: '6.9"',
-    devices: ['iPhone 16 Pro Max', 'iPhone 16 Plus', 'iPhone 15 Pro Max', 'iPhone 15 Plus', 'iPhone 14 Pro Max'],
+    devices: ['iPhone 17 Pro Max', 'iPhone 16 Plus', 'iPhone 15 Pro Max', 'iPhone 15 Plus', 'iPhone 14 Pro Max'],
     resolutions: {
       portrait: '1290x2796',
       landscape: '2796x1290'
@@ -37,7 +37,7 @@ export const IPHONE_PRESETS: DevicePreset[] = [
     id: 'iphone-6-9-alt',
     name: 'iPhone 6.9" Display (Alternative)',
     displaySize: '6.9"',
-    devices: ['iPhone 16 Pro Max', 'iPhone 16 Plus', 'iPhone 15 Pro Max', 'iPhone 15 Plus', 'iPhone 14 Pro Max'],
+    devices: ['iPhone 17 Pro Max', 'iPhone 16 Plus', 'iPhone 15 Pro Max', 'iPhone 15 Plus', 'iPhone 14 Pro Max'],
     resolutions: {
       portrait: '1320x2868',
       landscape: '2868x1320'

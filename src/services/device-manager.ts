@@ -18,7 +18,7 @@ const exec = promisify(execCallback);
 // Device name to category mapping
 const DEVICE_MAPPING: DeviceMapping = {
   // iPhone simulators
-  'iPhone 16 Pro Max': { category: 'iphone', displaySize: '6.9', appStoreResolution: '1320x2868' },
+  'iPhone 17 Pro Max': { category: 'iphone', displaySize: '6.9', appStoreResolution: '1320x2868' },
   'iPhone 16 Pro': { category: 'iphone', displaySize: '6.3', appStoreResolution: '1206x2622' },
   'iPhone 16 Plus': { category: 'iphone', displaySize: '6.7', appStoreResolution: '1290x2796' },
   'iPhone 16': { category: 'iphone', displaySize: '6.1', appStoreResolution: '1179x2556' },
