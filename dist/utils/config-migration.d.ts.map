@@ -1,0 +1,1 @@
+{"version":3,"file":"config-migration.d.ts","sourceRoot":"","sources":["../../src/utils/config-migration.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,aAAa,EAAE,eAAe,EAAgB,MAAM,aAAa,CAAC;AAEhF,MAAM,WAAW,eAAe;IAC9B,MAAM,EAAE,eAAe,CAAC;IACxB,QAAQ,EAAE,MAAM,EAAE,CAAC;CACpB;AAQD,wBAAgB,mBAAmB,CAAC,MAAM,EAAE,aAAa,GAAG,eAAe,CA+C1E"}

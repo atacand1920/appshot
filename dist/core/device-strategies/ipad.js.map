@@ -1,0 +1,1 @@
+{"version":3,"file":"ipad.js","sourceRoot":"","sources":["../../../src/core/device-strategies/ipad.ts"],"names":[],"mappings":"AAEA,MAAM,CAAC,MAAM,cAAc,GAAqB;IAC9C,UAAU,EAAE,MAAM;IAClB,YAAY,EAAE,IAAI;IAClB,YAAY,EAAE,GAAG;IACjB,WAAW,EAAE,EAAE;IACf,SAAS,EAAE,EAAE;IACb,eAAe,EAAE,CAAC;IAClB,iBAAiB,EAAE,GAAG;IACtB,SAAS,EAAE,KAAK;IAChB,OAAO,EAAE,EAAE;IACX,OAAO,EAAE,EAAE;CACZ,CAAC"}

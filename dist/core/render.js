@@ -1,0 +1,92 @@
+import sharp from 'sharp';
+import { createGradientBitmap } from './text-renderer.js';
+export async function renderGradient(width, height, config) {
+    // Use bitmap gradient instead of SVG
+    const { colors, direction } = config;
+    // Use bitmap gradient instead of SVG - works without librsvg!
+    const directionMap = {
+        'top-bottom': 'vertical',
+        'bottom-top': 'vertical', // Will need to reverse colors
+        'left-right': 'horizontal',
+        'right-left': 'horizontal', // Will need to reverse colors
+        'diagonal': 'diagonal'
+    };
+    const mappedDirection = directionMap[direction || 'top-bottom'] || 'vertical';
+    let effectiveColors = [...colors];
+    // Reverse colors for bottom-top or right-left
+    if (direction === 'bottom-top' || direction === 'right-left') {
+        effectiveColors = effectiveColors.reverse();
+    }
+    return await createGradientBitmap(width, height, effectiveColors, mappedDirection);
+}
+export async function addCaption(image, text, config) {
+    if (!text)
+        return image;
+    const metadata = await sharp(image).metadata();
+    const width = metadata.width || 1000;
+    const height = metadata.height || 1000;
+    // Create text as SVG
+    const textY = config.paddingTop + config.fontsize;
+    let textAnchor = 'middle';
+    let textX = width / 2;
+    if (config.align === 'left') {
+        textAnchor = 'start';
+        textX = config.paddingLeft || 50;
+    }
+    else if (config.align === 'right') {
+        textAnchor = 'end';
+        textX = width - (config.paddingRight || 50);
+    }
+    const svg = `
+    <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+      <text
+        x="${textX}"
+        y="${textY}"
+        font-family="${config.font}"
+        font-size="${config.fontsize}"
+        fill="${config.color}"
+        text-anchor="${textAnchor}"
+      >${escapeXml(text)}</text>
+    </svg>
+  `;
+    // Composite text over image
+    return sharp(image)
+        .composite([{
+            input: Buffer.from(svg),
+            top: 0,
+            left: 0
+        }])
+        .toBuffer();
+}
+export async function compositeScreenshot(screenshot, frame, frameMetadata) {
+    if (!frame)
+        return screenshot;
+    // Default frame metadata (will be customized per device)
+    const meta = frameMetadata || {
+        screenX: 100,
+        screenY: 200,
+        screenWidth: 1084,
+        screenHeight: 2378
+    };
+    // Resize screenshot to fit frame screen area
+    const resizedScreenshot = await sharp(screenshot)
+        .resize(meta.screenWidth, meta.screenHeight, { fit: 'fill' })
+        .toBuffer();
+    // Composite screenshot into frame
+    return sharp(frame)
+        .composite([{
+            input: resizedScreenshot,
+            left: meta.screenX,
+            top: meta.screenY
+        }])
+        .toBuffer();
+}
+function escapeXml(text) {
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
+}
+//# sourceMappingURL=render.js.map

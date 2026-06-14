@@ -1,0 +1,199 @@
+import { Command } from 'commander';
+import { select, confirm } from '@inquirer/prompts';
+import { promises as fs } from 'fs';
+import path from 'path';
+import pc from 'picocolors';
+import { translationService } from '../services/translation.js';
+export default function localizeCmd() {
+    return new Command('localize')
+        .description('Batch translate all captions to multiple languages using AI')
+        .requiredOption('--langs <codes>', 'comma-separated language codes (e.g., fr,de,es)')
+        .option('--device <name>', 'specific device (iphone|ipad|mac|watch), or all devices')
+        .option('--model <name>', 'OpenAI model to use', 'gpt-4o-mini')
+        .option('--source <lang>', 'source language', 'en')
+        .option('--review', 'review translations before saving')
+        .option('--overwrite', 'overwrite existing translations')
+        .addHelpText('after', `
+${pc.bold('Examples:')}
+  ${pc.dim('# Translate all captions to Spanish, French, and German')}
+  $ appshot localize --langs es,fr,de
+  
+  ${pc.dim('# Translate with review before saving')}
+  $ appshot localize --langs ja,ko,zh-CN --review
+  
+  ${pc.dim('# Use GPT-4o for higher quality')}
+  $ appshot localize --langs pt-BR --model gpt-4o
+  
+  ${pc.dim('# Translate only iPhone captions')}
+  $ appshot localize --langs ar,he --device iphone
+  
+  ${pc.dim('# Overwrite existing translations')}
+  $ appshot localize --langs it,nl --overwrite
+
+${pc.bold('Supported Languages:')}
+  ${pc.cyan('European:')} es, fr, de, it, pt, pt-BR, nl, sv, no, da, fi, pl, ru
+  ${pc.cyan('Asian:')} ja, ko, zh-CN, zh-TW, hi, th, vi, id, ms
+  ${pc.cyan('Middle East:')} ar, he, tr
+  
+${pc.bold('AI Models:')}
+  ${pc.cyan('gpt-4o-mini')} - Fast and affordable (default)
+  ${pc.cyan('gpt-4o')} - Higher quality translations
+  ${pc.cyan('gpt-5')} - Most advanced (when available)
+  
+${pc.bold('Requirements:')}
+  Set ${pc.cyan('OPENAI_API_KEY')} environment variable
+  
+${pc.bold('Output:')}
+  Updates ${pc.cyan('.appshot/captions/[device].json')} with translations`)
+        .action(async (opts) => {
+        try {
+            // Check for API key
+            if (!translationService.hasApiKey()) {
+                console.error(pc.red('Error:'), 'OpenAI API key not found');
+                console.log(pc.dim('Set the OPENAI_API_KEY environment variable:'));
+                console.log(pc.dim('  export OPENAI_API_KEY="your-api-key"'));
+                process.exit(1);
+            }
+            // Parse languages
+            const targetLanguages = opts.langs.split(',').map((l) => l.trim());
+            const sourceLang = opts.source;
+            // Select model
+            let selectedModel = opts.model;
+            const availableModels = translationService.getAvailableModels();
+            if (!availableModels.includes(selectedModel)) {
+                console.log(pc.yellow('\nSelect AI model for translation:'));
+                selectedModel = await select({
+                    message: 'Choose model:',
+                    choices: availableModels.map(m => {
+                        const info = translationService.getModelInfo(m);
+                        return {
+                            value: m,
+                            name: m,
+                            description: info ? `Max output: ${info.maxTokens} tokens` : ''
+                        };
+                    })
+                });
+            }
+            await translationService.loadConfig();
+            console.log(pc.bold('\n📝 Batch Translation'));
+            console.log('Source language:', pc.cyan(sourceLang));
+            console.log('Target languages:', pc.cyan(targetLanguages.join(', ')));
+            console.log('Model:', pc.cyan(selectedModel));
+            console.log();
+            // Determine which devices to process
+            const captionsDir = path.join(process.cwd(), '.appshot', 'captions');
+            let devices = [];
+            if (opts.device && opts.device !== 'all') {
+                devices = [opts.device];
+            }
+            else {
+                // Get all device caption files
+                try {
+                    const files = await fs.readdir(captionsDir);
+                    devices = files
+                        .filter(f => f.endsWith('.json'))
+                        .map(f => f.replace('.json', ''));
+                }
+                catch {
+                    console.error(pc.red('Error:'), 'No caption files found');
+                    console.log(pc.dim('Run'), pc.cyan('appshot caption'), pc.dim('to create captions first'));
+                    process.exit(1);
+                }
+            }
+            // Process each device
+            let totalTranslated = 0;
+            let totalSkipped = 0;
+            for (const device of devices) {
+                const captionsFile = path.join(captionsDir, `${device}.json`);
+                try {
+                    const content = await fs.readFile(captionsFile, 'utf8');
+                    const captions = JSON.parse(content);
+                    console.log(pc.cyan(`\n${device.toUpperCase()}`));
+                    console.log(pc.dim('─'.repeat(40)));
+                    // Collect unique captions to translate
+                    const textsToTranslate = new Set();
+                    for (const [_filename, caption] of Object.entries(captions)) {
+                        if (typeof caption === 'string') {
+                            textsToTranslate.add(caption);
+                        }
+                        else if (caption && typeof caption === 'object') {
+                            const sourceText = caption[sourceLang];
+                            if (sourceText) {
+                                // Check if we should translate (no existing translations or overwrite enabled)
+                                const hasExistingTranslations = targetLanguages.some((lang) => caption[lang]);
+                                if (!hasExistingTranslations || opts.overwrite) {
+                                    textsToTranslate.add(sourceText);
+                                }
+                            }
+                        }
+                    }
+                    if (textsToTranslate.size === 0) {
+                        console.log(pc.yellow('  No captions to translate'));
+                        totalSkipped++;
+                        continue;
+                    }
+                    console.log(`  Found ${textsToTranslate.size} unique caption(s) to translate`);
+                    // Batch translate
+                    const translations = await translationService.translateBatch(Array.from(textsToTranslate), targetLanguages, selectedModel, (current, total) => {
+                        process.stdout.write(`\r  Translating: ${current}/${total}`);
+                    });
+                    process.stdout.write('\r' + ' '.repeat(50) + '\r'); // Clear progress line
+                    // Review translations if requested
+                    if (opts.review) {
+                        console.log(pc.yellow('\n  Review translations:'));
+                        for (const [text, trans] of translations.entries()) {
+                            console.log(`\n  Original: ${pc.white(text)}`);
+                            for (const [lang, translation] of Object.entries(trans)) {
+                                console.log(`  ${lang}: ${pc.green(translation)}`);
+                            }
+                            const proceed = await confirm({
+                                message: '  Accept these translations?',
+                                default: true
+                            });
+                            if (!proceed) {
+                                translations.delete(text);
+                            }
+                        }
+                    }
+                    // Apply translations to captions
+                    for (const [filename, caption] of Object.entries(captions)) {
+                        let sourceText;
+                        if (typeof caption === 'string') {
+                            sourceText = caption;
+                            // Convert to object format
+                            captions[filename] = { [sourceLang]: caption };
+                        }
+                        else if (caption && typeof caption === 'object') {
+                            sourceText = caption[sourceLang];
+                        }
+                        if (sourceText && translations.has(sourceText)) {
+                            const trans = translations.get(sourceText);
+                            for (const [lang, translation] of Object.entries(trans)) {
+                                captions[filename][lang] = translation;
+                            }
+                        }
+                    }
+                    // Save updated captions
+                    await fs.writeFile(captionsFile, JSON.stringify(captions, null, 2), 'utf8');
+                    console.log(pc.green('  ✓'), `Translated ${translations.size} caption(s)`);
+                    totalTranslated += translations.size;
+                }
+                catch (error) {
+                    console.error(pc.red(`  Error processing ${device}:`), error instanceof Error ? error.message : String(error));
+                }
+            }
+            // Summary
+            console.log(pc.bold('\n📊 Summary'));
+            console.log(pc.green('✓'), `Translated ${totalTranslated} unique caption(s)`);
+            if (totalSkipped > 0) {
+                console.log(pc.yellow('⚠'), `Skipped ${totalSkipped} device(s) with no captions`);
+            }
+            console.log(pc.dim('\nRun'), pc.cyan('appshot build --langs ' + targetLanguages.join(',')), pc.dim('to generate localized screenshots'));
+        }
+        catch (error) {
+            console.error(pc.red('Error:'), error instanceof Error ? error.message : String(error));
+            process.exit(1);
+        }
+    });
+}
+//# sourceMappingURL=localize.js.map

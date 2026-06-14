@@ -1,0 +1,133 @@
+/**
+ * Text utilities for caption rendering
+ */
+// Character width factors for text estimation
+const CHAR_WIDTH_FACTOR_NORMAL = 0.65; // Average character width relative to font size
+const CHAR_WIDTH_FACTOR_NARROW = 0.5; // Character width for narrow displays (watch)
+// Width thresholds
+const NARROW_WIDTH_THRESHOLD = 500; // Width below which to use narrow character factor
+// Padding values
+const MIN_USABLE_WIDTH = 40;
+/**
+ * Estimate text width in pixels for SVG rendering
+ * This is an approximation based on average character widths
+ */
+export function estimateTextWidth(text, fontSize) {
+    // Average character width is roughly 0.65 of font size for most fonts
+    // Adjust for bold text (slightly wider)
+    const avgCharWidth = fontSize * CHAR_WIDTH_FACTOR_NORMAL;
+    return text.length * avgCharWidth;
+}
+/**
+ * Calculate how many characters fit in a given width
+ */
+export function calculateCharsPerLine(width, fontSize) {
+    const usableWidth = Math.max(width, MIN_USABLE_WIDTH);
+    const avgCharWidth = usableWidth < NARROW_WIDTH_THRESHOLD
+        ? fontSize * CHAR_WIDTH_FACTOR_NARROW
+        : fontSize * CHAR_WIDTH_FACTOR_NORMAL;
+    return Math.max(1, Math.floor(usableWidth / avgCharWidth));
+}
+/**
+ * Smart word wrapping algorithm
+ * Wraps text to fit within specified width, returning array of lines
+ */
+export function wrapText(text, maxWidth, fontSize, maxLines) {
+    if (!text)
+        return [];
+    const words = text.split(' ');
+    const lines = [];
+    let currentLine = '';
+    const charsPerLine = calculateCharsPerLine(maxWidth, fontSize);
+    for (const word of words) {
+        const testLine = currentLine ? `${currentLine} ${word}` : word;
+        if (testLine.length <= charsPerLine) {
+            currentLine = testLine;
+        }
+        else {
+            if (currentLine) {
+                lines.push(currentLine);
+                currentLine = word;
+                // Check if we've reached max lines
+                if (maxLines && lines.length >= maxLines - 1) {
+                    // Add remaining text with ellipsis if needed
+                    const wordIndex = words.indexOf(word);
+                    const remainingWords = words.slice(wordIndex);
+                    const remainingText = remainingWords.join(' ');
+                    if (remainingText.length > charsPerLine) {
+                        const truncated = remainingText.substring(0, charsPerLine - 3) + '...';
+                        lines.push(truncated);
+                    }
+                    else {
+                        lines.push(remainingText);
+                    }
+                    return lines; // Return immediately
+                }
+            }
+            else {
+                // Single word is too long, truncate it
+                const truncated = word.substring(0, charsPerLine - 3) + '...';
+                lines.push(truncated);
+                currentLine = '';
+            }
+        }
+    }
+    // Add any remaining text
+    if (currentLine && (!maxLines || lines.length < maxLines)) {
+        lines.push(currentLine);
+    }
+    return lines;
+}
+/**
+ * Calculate optimal caption height based on content and constraints
+ */
+export function calculateCaptionHeight(text, fontSize, canvasWidth, options = {}) {
+    const { lineHeight = 1.4, paddingTop = 40, paddingBottom = 40, minHeight = 100, maxHeight = 500, maxLines = 3 } = options;
+    // Wrap text to get actual lines needed
+    const lines = wrapText(text, canvasWidth, fontSize, maxLines);
+    // Calculate height based on number of lines
+    const textHeight = lines.length * fontSize * lineHeight;
+    const totalHeight = paddingTop + textHeight + paddingBottom;
+    // Apply constraints
+    const constrainedHeight = Math.max(minHeight, Math.min(maxHeight, totalHeight));
+    return {
+        height: Math.ceil(constrainedHeight),
+        lines
+    };
+}
+/**
+ * Calculate dynamic caption height based on device position
+ */
+export function calculateAdaptiveCaptionHeight(text, fontSize, canvasWidth, canvasHeight, deviceTop, deviceHeight, framePosition) {
+    // Calculate available space based on device position
+    let availableSpace;
+    if (framePosition === 'top' || framePosition === 0) {
+        // Device at top, limited caption space
+        availableSpace = canvasHeight * 0.15;
+    }
+    else if (framePosition === 'bottom' || framePosition === 100) {
+        // Device at bottom, maximum caption space
+        availableSpace = Math.max(deviceTop - 20, canvasHeight * 0.5); // Use significant space
+    }
+    else if (typeof framePosition === 'number') {
+        // Custom position, calculate available space
+        availableSpace = deviceTop - 20;
+    }
+    else {
+        // Default centered or unspecified
+        // Use space above device or default calculation
+        if (deviceTop > canvasHeight * 0.3) {
+            availableSpace = deviceTop - 20;
+        }
+        else {
+            availableSpace = canvasHeight * 0.25;
+        }
+    }
+    // Calculate with constraints
+    return calculateCaptionHeight(text, fontSize, canvasWidth, {
+        maxHeight: availableSpace,
+        minHeight: fontSize * 2,
+        maxLines: Math.floor(availableSpace / (fontSize * 1.4))
+    });
+}
+//# sourceMappingURL=text-utils.js.map
