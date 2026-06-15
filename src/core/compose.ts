@@ -681,11 +681,12 @@ export async function composeAppStoreScreenshot(options: ComposeOptions): Promis
         frameMetadata.displayName?.includes('iPad Pro 2025 13')) &&
       frameMetadata.screenRect.height >= frameMetadata.screenRect.width;
 
-    // Small vertical overscan for this frame to avoid tiny bottom slivers
-    // when users fine-tune Y in frame metadata.
-    const screenOverscanY = isIpad2025Portrait ? 4 : 0;
-    const resizedScreenHeight = frameMetadata.screenRect.height + screenOverscanY;
-    const screenTopOffset = 0;
+    // Small asymmetric vertical bleed for this frame to avoid tiny top/bottom
+    // slivers when users fine-tune Y in frame metadata.
+    const screenBleedTop = isIpad2025Portrait ? 2 : 0;
+    const screenBleedBottom = isIpad2025Portrait ? 6 : 0;
+    const resizedScreenHeight = frameMetadata.screenRect.height + screenBleedTop + screenBleedBottom;
+    const screenTopOffset = -screenBleedTop;
 
     let resizedScreenshot;
     try {
