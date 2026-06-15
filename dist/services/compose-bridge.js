@@ -183,7 +183,7 @@ export class ComposeBridge {
     findFrameKey(device, dimensions, _isPortrait) {
         // Use findBestFrame which returns a DeviceFrame
         const deviceType = device.category === 'iphone' || device.category === 'ipad' ||
-            device.category === 'mac' || device.category === 'watch'
+            device.category === 'mac' || device.category === 'watch' || device.category == 'android'
             ? device.category
             : 'iphone'; // Default to iphone for unsupported types
         const bestFrame = findBestFrame(dimensions.width, dimensions.height, deviceType);

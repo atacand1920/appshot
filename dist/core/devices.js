@@ -258,18 +258,18 @@ export let frameRegistry = [
         name: 'ipad-pro-2025-13-portrait',
         displayName: 'iPad Pro 2025 13"',
         orientation: 'portrait',
-        frameWidth: 2264,
-        frameHeight: 3144,
-        screenRect: { x: 108, y: 132, width: 2064, height: 2752 },
+        frameWidth: 2612,
+        frameHeight: 3416,
+        screenRect: { x: 96, y: 102, width: 2420, height: 3212 },
         deviceType: 'ipad'
     },
     {
         name: 'ipad-pro-2025-13-landscape',
         displayName: 'iPad Pro 2025 13"',
         orientation: 'landscape',
-        frameWidth: 3144,
-        frameHeight: 2264,
-        screenRect: { x: 132, y: 108, width: 2752, height: 2064 },
+        frameWidth: 3416,
+        frameHeight: 2612,
+        screenRect: { x: 102, y: 96, width: 3212, height: 2420 },
         deviceType: 'ipad'
     },
     // iPad Pro 2024 11"
@@ -684,6 +684,15 @@ export function findBestFrame(screenshotWidth, screenshotHeight, deviceType, pre
                     f.orientation === 'landscape' &&
                     !f.displayName.includes('11'));
             }
+        }
+        // Special case: For 2420x3212 (iPad Pro 13" M5 / 2025), ensure we get the 2025 13" frame
+        if (screenshotWidth === 2420 && screenshotHeight === 3212) {
+            const ipad2025Frame = frameRegistry.find(f => (f.name === 'ipad-pro-2025-13-portrait' ||
+                f.displayName?.includes('2025 13') ||
+                f.originalName?.includes('2025 13')) &&
+                f.orientation === 'portrait');
+            if (ipad2025Frame)
+                exactFrame = ipad2025Frame;
         }
         if (exactFrame) {
             console.log(`    Found exact frame: ${exactFrame.displayName}`);
