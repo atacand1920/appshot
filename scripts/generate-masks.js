@@ -82,7 +82,7 @@ function radiusFor(name, width, height) {
   const base = Math.min(width, height);
 
   if (n.includes('watch')) return Math.round(base * 0.25);
-  if (n.includes('ipad') || n.includes('tablet')) return Math.round(base * 0.06);
+  if (n.includes('ipad') || n.includes('tablet')) return 0;
   if (n.includes('pixel fold') || n.includes('fold')) return Math.round(base * 0.04);
 
   if (
