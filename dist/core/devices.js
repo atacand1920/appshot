@@ -583,7 +583,7 @@ export async function getImageDimensions(imagePath) {
 // Map exact resolutions to specific devices
 const RESOLUTION_TO_DEVICE = {
     // iPhone resolutions (portrait)
-    '1320x2868': 'iphone-16-pro-max',
+    '1320x2868': 'iphone-17-pro-max',
     '1206x2622': 'iphone-16-pro',
     '1290x2796': 'iphone-15-pro-max',
     '1179x2556': 'iphone-15-pro',
@@ -595,7 +595,7 @@ const RESOLUTION_TO_DEVICE = {
     '1080x2340': 'iphone-12-mini',
     '750x1334': 'iphone-8-and-2020-se',
     // iPhone resolutions (landscape)
-    '2868x1320': 'iphone-16-pro-max-landscape',
+    '2868x1320': 'iphone-17-pro-max-landscape',
     '2622x1206': 'iphone-16-pro-landscape',
     '2796x1290': 'iphone-15-pro-max-landscape',
     '2556x1179': 'iphone-15-pro-landscape',
@@ -611,14 +611,14 @@ const RESOLUTION_TO_DEVICE = {
     '1640x2360': 'ipad air 2020', // iPad Air
     '1620x2160': 'ipad 2021', // Regular iPad & iPad mini (same resolution)
     '2064x2752': 'ipad pro 2024 11', // iPad Pro 11" M4
-    '2420x3212': 'ipad pro 2024 13', // iPad Pro 13" M4
+    '2420x3212': 'ipad pro 2025 13', // iPad Pro 13" M5
     // iPad resolutions (landscape)
     '2732x2048': 'ipad pro 2018 2021', // iPad Pro 12.9"
     '2388x1668': 'ipad pro 2018 2021 11', // iPad Pro 11"
     '2360x1640': 'ipad air 2020', // iPad Air
     '2160x1620': 'ipad 2021', // Regular iPad & iPad mini (same resolution)
     '2752x2064': 'ipad pro 2024 13', // iPad Pro 13" M4
-    '3212x2420': 'ipad pro 2024 13', // iPad Pro 13" M4
+    '3212x2420': 'ipad pro 2025 13', // iPad Pro 13" M5
     // Mac resolutions
     '3456x2234': 'macbook-pro-16',
     '3024x1964': 'macbook-pro-14',
