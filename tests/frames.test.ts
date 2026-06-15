@@ -351,7 +351,7 @@ describe('Frames.json validation', () => {
       const testFrames = [
         'iPhone 17 Pro Max Portrait.png',
         'iPhone 17 Pro Max Landscape.png',
-        'iPad Pro 2024 13 Portrait.png',
+        'iPad Pro 2025 13 Portrait.png',
         'MacBook Pro 2021 16.png',
         'Watch Ultra 2024.png'
       ];

@@ -647,7 +647,8 @@ const RESOLUTION_TO_DEVICE: Record<string, string> = {
   '1668x2388': 'ipad pro 2018 2021 11',  // iPad Pro 11"
   '1640x2360': 'ipad air 2020',     // iPad Air
   '1620x2160': 'ipad 2021',         // Regular iPad & iPad mini (same resolution)
-  '2064x2752': 'ipad pro 2024 11',  // iPad Pro 11" M4
+  '1668x2420': 'ipad pro 2024 11',  // iPad Pro 11" M4
+  '2064x2752': 'ipad pro 2024 13',  // iPad Pro 13" M4
   '2420x3212': 'ipad pro 2025 13',  // iPad Pro 13" M5
 
   // iPad resolutions (landscape)

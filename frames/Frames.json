@@ -278,18 +278,6 @@
                 "name": "iPad Pro 2018-2021 Portrait"
             }
         },
-        "2024 iPad Pro 13": {
-            "Landscape": {
-                "x": "124",
-                "y": "118",
-                "name": "iPad Pro 2024 13 Landscape"
-            },
-            "Portrait": {
-                "x": "118",
-                "y": "124",
-                "name": "iPad Pro 2024 13 Portrait"
-            }
-        },
         "2025 iPad Pro 13": {
             "Landscape": {
                 "x": "102",

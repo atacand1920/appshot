@@ -67,9 +67,13 @@ const DEVICE_RESOLUTIONS: Record<string, { portrait: { width: number; height: nu
 
   // iPad resolutions
   'ipad pro 2018-2021': { portrait: { width: 2048, height: 2732 }, landscape: { width: 2732, height: 2048 } },
+  'ipad pro 2018-2021 portrait': { portrait: { width: 2048, height: 2732 }, landscape: { width: 2732, height: 2048 } },
   'ipad pro 2018-2021 11': { portrait: { width: 1668, height: 2388 }, landscape: { width: 2388, height: 1668 } },
-  'ipad pro 2024 11': { portrait: { width: 2064, height: 2752 }, landscape: { width: 2752, height: 2064 } },
-  'ipad pro 2024 13': { portrait: { width: 2064, height: 2752 }, landscape: { width: 2752, height: 2064 } },
+  'ipad pro 2018-2021 11 portrait': { portrait: { width: 1668, height: 2388 }, landscape: { width: 2388, height: 1668 } },
+  'ipad pro 2024 11': { portrait: { width: 1668, height: 2420 }, landscape: { width: 2420, height: 1668 } },
+  'ipad pro 2024 11 portrait': { portrait: { width: 1668, height: 2420 }, landscape: { width: 2420, height: 1668 } },
+  'ipad pro 2025 13': { portrait: { width: 2420, height: 3212 }, landscape: { width: 3212, height: 2420 } },
+  'ipad pro 2025 13 portrait': { portrait: { width: 2420, height: 3212 }, landscape: { width: 3212, height: 2420 } },
   'ipad air 2020': { portrait: { width: 1640, height: 2360 }, landscape: { width: 2360, height: 1640 } },
   'ipad mini 2021': { portrait: { width: 1620, height: 2160 }, landscape: { width: 2160, height: 1620 } },
   'ipad 2021': { portrait: { width: 1620, height: 2160 }, landscape: { width: 2160, height: 1620 } },
