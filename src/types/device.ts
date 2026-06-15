@@ -1,5 +1,5 @@
 export type DeviceType = 'physical' | 'simulator';
-export type DeviceCategory = 'iphone' | 'ipad' | 'watch' | 'mac' | 'vision' | 'tv';
+export type DeviceCategory = 'iphone' | 'ipad' | 'watch' | 'mac' | 'vision' | 'tv' | 'android';
 export type DeviceState = 'connected' | 'booted' | 'shutdown' | 'disconnected';
 
 export interface UnifiedDevice {

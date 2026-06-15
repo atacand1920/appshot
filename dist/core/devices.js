@@ -16,26 +16,15 @@ export let frameRegistry = [
         deviceType: 'iphone',
         maskPath: 'frames/iPhone 17 Pro Max Portrait_mask.png'
     },
-    // iPhone 16 Pro Max
     {
-        name: 'iphone-16-pro-max-portrait',
-        displayName: 'iPhone 16 Pro Max',
-        orientation: 'portrait',
-        frameWidth: 1458,
-        frameHeight: 3054,
-        screenRect: { x: 75, y: 66, width: 1320, height: 2868 },
-        deviceType: 'iphone',
-        maskPath: 'frames/iPhone 16 Pro Max Portrait_mask.png'
-    },
-    {
-        name: 'iphone-16-pro-max-landscape',
-        displayName: 'iPhone 16 Pro Max',
+        name: 'iphone-17-pro-max-landscape',
+        displayName: 'iPhone 17 Pro Max',
         orientation: 'landscape',
         frameWidth: 3054,
         frameHeight: 1458,
         screenRect: { x: 66, y: 75, width: 2868, height: 1320 },
         deviceType: 'iphone',
-        maskPath: 'frames/iPhone 16 Pro Max Landscape_mask.png'
+        maskPath: 'frames/iPhone 17 Pro Max Landscape_mask.png'
     },
     // iPhone 16 Pro
     {
@@ -517,7 +506,26 @@ export let frameRegistry = [
         frameHeight: 732,
         screenRect: { x: 114, y: 308, width: 324, height: 394 },
         deviceType: 'watch'
-    }
+    },
+    // Nexus 9 tablet
+    {
+        name: 'android-nexus-9-portrait',
+        displayName: 'Android Nexus 9 (Portrait)',
+        orientation: 'portrait',
+        frameWidth: 1728,
+        frameHeight: 2567,
+        screenRect: { x: 96, y: 260, width: 1536, height: 2048 },
+        deviceType: 'android'
+    },
+    {
+        name: 'android-nexus-9-landscape',
+        displayName: 'Android Nexus 9 (Landscape)',
+        orientation: 'landscape',
+        frameWidth: 2567,
+        frameHeight: 1728,
+        screenRect: { x: 260, y: 96, width: 2048, height: 1536 },
+        deviceType: 'android'
+    },
 ];
 /**
  * Detect orientation from image dimensions

@@ -11,7 +11,7 @@ export interface DeviceFrame {
         width: number;
         height: number;
     };
-    deviceType: 'iphone' | 'ipad' | 'mac' | 'watch';
+    deviceType: 'iphone' | 'ipad' | 'mac' | 'watch' | 'android';
     originalName?: string;
     maskPath?: string;
 }
@@ -36,7 +36,7 @@ export declare function getImageDimensions(imagePath: string): Promise<{
 /**
  * Find best matching frame for a screenshot
  */
-export declare function findBestFrame(screenshotWidth: number, screenshotHeight: number, deviceType: 'iphone' | 'ipad' | 'mac' | 'watch', preferredFrame?: string): DeviceFrame | null;
+export declare function findBestFrame(screenshotWidth: number, screenshotHeight: number, deviceType: 'iphone' | 'ipad' | 'mac' | 'watch' | 'android', preferredFrame?: string): DeviceFrame | null;
 /**
  * Initialize frame registry from Frames.json if available
  */
@@ -48,7 +48,7 @@ export declare function loadFrame(framePath: string, frameName: string): Promise
 /**
  * Auto-detect and load appropriate frame for a screenshot
  */
-export declare function autoSelectFrame(screenshotPath: string, framesDir: string, deviceType: 'iphone' | 'ipad' | 'mac' | 'watch', preferredFrame?: string, dryRun?: boolean): Promise<{
+export declare function autoSelectFrame(screenshotPath: string, framesDir: string, deviceType: 'iphone' | 'ipad' | 'mac' | 'watch' | 'android', preferredFrame?: string, dryRun?: boolean): Promise<{
     frame: Buffer | null;
     metadata: DeviceFrame | null;
 }>;
