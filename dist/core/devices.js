@@ -611,14 +611,12 @@ const RESOLUTION_TO_DEVICE = {
     '1640x2360': 'ipad air 2020', // iPad Air
     '1620x2160': 'ipad 2021', // Regular iPad & iPad mini (same resolution)
     '1668x2420': 'ipad pro 2024 11', // iPad Pro 11" M4
-    '2064x2752': 'ipad pro 2024 13', // iPad Pro 13" M4
     '2420x3212': 'ipad pro 2025 13', // iPad Pro 13" M5
     // iPad resolutions (landscape)
     '2732x2048': 'ipad pro 2018 2021', // iPad Pro 12.9"
     '2388x1668': 'ipad pro 2018 2021 11', // iPad Pro 11"
     '2360x1640': 'ipad air 2020', // iPad Air
     '2160x1620': 'ipad 2021', // Regular iPad & iPad mini (same resolution)
-    '2752x2064': 'ipad pro 2024 13', // iPad Pro 13" M4
     '3212x2420': 'ipad pro 2025 13', // iPad Pro 13" M5
     // Mac resolutions
     '3456x2234': 'macbook-pro-16',
@@ -717,12 +715,17 @@ export function findBestFrame(screenshotWidth, screenshotHeight, deviceType, pre
             return frame;
         }
     }
-    // Otherwise find frame with closest aspect ratio match
+    // Otherwise find frame with closest aspect ratio and size match
+    // so large-tablet screenshots do not collapse to smaller 4:3 frames.
     let bestFrame = candidates[0];
-    let bestDiff = Math.abs((bestFrame.screenRect.width / bestFrame.screenRect.height) - aspectRatio);
+    let bestDiff = Number.POSITIVE_INFINITY;
     for (const frame of candidates) {
         const frameAspectRatio = frame.screenRect.width / frame.screenRect.height;
-        const diff = Math.abs(frameAspectRatio - aspectRatio);
+        const aspectDiff = Math.abs(frameAspectRatio - aspectRatio) / Math.max(aspectRatio, 0.0001);
+        const widthDiff = Math.abs(frame.screenRect.width - screenshotWidth) / Math.max(screenshotWidth, 1);
+        const heightDiff = Math.abs(frame.screenRect.height - screenshotHeight) / Math.max(screenshotHeight, 1);
+        // Weighted score: keep aspect close, but strongly prefer matching screen dimensions.
+        const diff = aspectDiff + widthDiff + heightDiff;
         if (diff < bestDiff) {
             bestDiff = diff;
             bestFrame = frame;
