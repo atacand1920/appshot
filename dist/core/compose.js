@@ -464,7 +464,7 @@ export async function composeAppStoreScreenshot(options) {
         else if (frameMetadata.deviceType === 'ipad') {
             // iPad frames can look undersized in header/footer layouts with large canvases.
             // Use a slightly larger default so output looks correct without extra config tuning.
-            scale = Math.min(scaleX, scaleY) * 1.0;
+            scale = Math.min(scaleX, scaleY) * 1.05;
         }
         else if (frameMetadata.deviceType === 'mac') {
             // For Mac, make it larger to be more visible
