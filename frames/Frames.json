@@ -280,13 +280,13 @@
         },
         "2025 iPad Pro 13": {
             "Landscape": {
-                "x": "102",
+                "x": "104",
                 "y": "69",
                 "name": "iPad Pro 2025 13 Landscape"
             },
             "Portrait": {
                 "x": "96",
-                "y": "102",
+                "y": "104",
                 "name": "iPad Pro 2025 13 Portrait"
             }
         },

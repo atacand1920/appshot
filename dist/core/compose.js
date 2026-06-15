@@ -538,7 +538,7 @@ export async function composeAppStoreScreenshot(options) {
             }
             else {
                 // Standard models and older Pro models (~10% of width)
-                cornerRadius = 0;
+                cornerRadius = Math.floor(frameMetadata.screenRect.width * 0.10);
             }
             if (cornerRadius > 0) {
                 // Apply rounded corners using our custom mask generator
