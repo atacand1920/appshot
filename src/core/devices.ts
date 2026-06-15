@@ -274,10 +274,10 @@ export let frameRegistry: DeviceFrame[] = [
   },
 
   // iPad frames
-  // iPad Pro 2024 13"
+  // iPad Pro 2025 13"
   {
-    name: 'ipad-pro-2024-13-portrait',
-    displayName: 'iPad Pro 2024 13"',
+    name: 'ipad-pro-2025-13-portrait',
+    displayName: 'iPad Pro 2025 13"',
     orientation: 'portrait',
     frameWidth: 2264,
     frameHeight: 3144,
@@ -285,8 +285,8 @@ export let frameRegistry: DeviceFrame[] = [
     deviceType: 'ipad'
   },
   {
-    name: 'ipad-pro-2024-13-landscape',
-    displayName: 'iPad Pro 2024 13"',
+    name: 'ipad-pro-2025-13-landscape',
+    displayName: 'iPad Pro 2025 13"',
     orientation: 'landscape',
     frameWidth: 3144,
     frameHeight: 2264,

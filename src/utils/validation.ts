@@ -25,7 +25,7 @@ export function sanitizeDevices(devices: string): string {
   const sanitized = devices.replace(/[^a-zA-Z0-9,_-]/g, '');
 
   // Validate each device is in allowed list
-  const validDevices = ['iphone', 'ipad', 'watch', 'mac'];
+  const validDevices = ['iphone', 'ipad', 'watch', 'mac', 'android'];
   const deviceList = sanitized.split(',').map(d => d.trim().toLowerCase());
 
   // Limit array size to prevent DoS
@@ -113,7 +113,7 @@ export function validateDeviceArray(devices: string[]): string[] {
     throw new Error(`Too many devices specified (max ${MAX_DEVICES})`);
   }
 
-  const validDevices = ['iphone', 'ipad', 'watch', 'mac'];
+  const validDevices = ['iphone', 'ipad', 'watch', 'mac', 'android'];
   const validated = devices
     .map(d => d.toLowerCase())
     .filter(d => validDevices.includes(d));
