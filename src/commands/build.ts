@@ -4,7 +4,7 @@ import path from 'path';
 import pc from 'picocolors';
 import sharp from 'sharp';
 import { loadConfig, loadCaptions } from '../core/files.js';
-import { autoSelectFrame, getImageDimensions, initializeFrameRegistry } from '../core/devices.js';
+import { autoSelectFrame, findBestFrame, getImageDimensions, initializeFrameRegistry, loadFrame } from '../core/devices.js';
 import { composeAppStoreScreenshot, composeV2 } from '../core/compose.js';
 import { resolveLanguages, normalizeLanguageCode } from '../utils/language.js';
 import { filenameToCaption } from '../utils/filename-caption.js';
@@ -278,18 +278,36 @@ ${pc.bold('Language Detection:')}
 
                   // Load frame if not disabled via CLI
                   if (opts.frame !== false) {
-                    // If autoFrame is disabled but preferredFrame is set, use the preferred frame
-                    // Otherwise, auto-select a frame
-                    const result = await autoSelectFrame(
-                      inputPath,
-                      path.resolve(framesDir),
-                      device as 'iphone' | 'ipad' | 'mac' | 'watch',
-                      isV2 ? undefined : (deviceConfig as AppshotConfig['devices'][string]).preferredFrame,
-                      opts.dryRun // Pass dry-run flag
-                    );
+                    const preferredFrame = isV2
+                      ? undefined
+                      : (deviceConfig as AppshotConfig['devices'][string]).preferredFrame;
 
-                    frame = result.frame;
-                    frameMetadata = result.metadata;
+                    // If resolution is configured, select frame against target output dimensions
+                    // instead of raw source screenshot dimensions.
+                    if (resolution) {
+                      frameMetadata = findBestFrame(
+                        outWidth,
+                        outHeight,
+                        device as 'iphone' | 'ipad' | 'mac' | 'watch',
+                        preferredFrame
+                      );
+
+                      if (frameMetadata && !opts.dryRun) {
+                        frame = await loadFrame(path.resolve(framesDir), frameMetadata.name);
+                      }
+                    } else {
+                      // Fall back to source-dimension based auto selection
+                      const result = await autoSelectFrame(
+                        inputPath,
+                        path.resolve(framesDir),
+                        device as 'iphone' | 'ipad' | 'mac' | 'watch',
+                        preferredFrame,
+                        opts.dryRun // Pass dry-run flag
+                      );
+
+                      frame = result.frame;
+                      frameMetadata = result.metadata;
+                    }
 
                     if (frameMetadata) {
                       frameUsed = true;
