@@ -461,11 +461,6 @@ export async function composeAppStoreScreenshot(options) {
             // For watch, use standard scaling
             scale = Math.min(scaleX, scaleY) * 0.9; // Use 90% scale for watch to fit properly
         }
-        else if (frameMetadata.deviceType === 'ipad') {
-            // iPad frames can look undersized in header/footer layouts with large canvases.
-            // Use a slightly larger default so output looks correct without extra config tuning.
-            scale = Math.min(scaleX, scaleY) * 1.2;
-        }
         else if (frameMetadata.deviceType === 'mac') {
             // For Mac, make it larger to be more visible
             scale = Math.min(scaleX, scaleY) * 0.95; // Use 95% scale for Mac
@@ -543,7 +538,7 @@ export async function composeAppStoreScreenshot(options) {
             }
             else {
                 // Standard models and older Pro models (~10% of width)
-                cornerRadius = Math.floor(frameMetadata.screenRect.width * 0.10);
+                cornerRadius = 0;
             }
             if (cornerRadius > 0) {
                 // Apply rounded corners using our custom mask generator
