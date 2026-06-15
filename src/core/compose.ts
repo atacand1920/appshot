@@ -683,8 +683,8 @@ export async function composeAppStoreScreenshot(options: ComposeOptions): Promis
 
     // Small asymmetric vertical bleed for this frame to avoid tiny top/bottom
     // slivers when users fine-tune Y in frame metadata.
-    const screenBleedTop = isIpad2025Portrait ? 2 : 0;
-    const screenBleedBottom = isIpad2025Portrait ? 6 : 0;
+    const screenBleedTop = isIpad2025Portrait ? 3 : 0;
+    const screenBleedBottom = isIpad2025Portrait ? 7 : 0;
     const resizedScreenHeight = frameMetadata.screenRect.height + screenBleedTop + screenBleedBottom;
     const screenTopOffset = -screenBleedTop;
 
