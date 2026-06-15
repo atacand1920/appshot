@@ -675,12 +675,24 @@ export async function composeAppStoreScreenshot(options: ComposeOptions): Promis
     }
 
     // Scale screenshot to fit in frame's screen area
+    const isIpad2025Portrait =
+      frameMetadata.deviceType === 'ipad' &&
+      (frameMetadata.name === 'ipad-pro-2025-13-portrait' ||
+        frameMetadata.displayName?.includes('iPad Pro 2025 13')) &&
+      frameMetadata.screenRect.height >= frameMetadata.screenRect.width;
+
+    // Small vertical overscan for this frame to avoid tiny top/bottom slivers
+    // when users fine-tune Y in frame metadata.
+    const screenOverscanY = isIpad2025Portrait ? 4 : 0;
+    const resizedScreenHeight = frameMetadata.screenRect.height + screenOverscanY;
+    const screenTopOffset = isIpad2025Portrait ? -Math.floor(screenOverscanY / 2) : 0;
+
     let resizedScreenshot;
     try {
       resizedScreenshot = await sharp(screenshot)
         .resize(
           frameMetadata.screenRect.width,
-          frameMetadata.screenRect.height,
+          resizedScreenHeight,
           {
             fit: 'fill'
           }
@@ -701,7 +713,7 @@ export async function composeAppStoreScreenshot(options: ComposeOptions): Promis
 
         // Resize mask to match screenshot dimensions
         const resizedMask = await sharp(maskBuffer)
-          .resize(frameMetadata.screenRect.width, frameMetadata.screenRect.height, {
+          .resize(frameMetadata.screenRect.width, resizedScreenHeight, {
             fit: 'fill'
           })
           .toBuffer();
@@ -774,7 +786,7 @@ export async function composeAppStoreScreenshot(options: ComposeOptions): Promis
         .composite([{
           input: resizedScreenshot,
           left: frameMetadata.screenRect.x,
-          top: frameMetadata.screenRect.y
+          top: frameMetadata.screenRect.y + screenTopOffset
         }])
         .png()
         .toBuffer();
